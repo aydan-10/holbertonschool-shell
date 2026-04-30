@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# This script displays specific fields from /etc/passwd using while loop
+while IFS=':' read -r user pass uid gid info home shell
+do
+    echo "user: $user id: $uid home: $home"
+done < /etc/passwd
