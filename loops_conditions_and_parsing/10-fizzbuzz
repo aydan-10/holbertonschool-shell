@@ -2,12 +2,12 @@
 # This script displays numbers from 1 to 100 with FizzBuzz logic
 for n in {1..100}
 do
-    if [ $((n % 3)) -eq 0 ] && [ $((n % 5)) -eq 0 ]
+    if [ $((n % 15)) -eq 0 ]
     then
         echo "FizzBuzz"
     elif [ $((n % 3)) -eq 0 ]
     then
-        echo "FizzBuzz"
+        echo "Fizz"
     elif [ $((n % 5)) -eq 0 ]
     then
         echo "Buzz"
