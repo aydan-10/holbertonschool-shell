@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
-# Apache log faylını qruplaşdırır və sıralayır
-awk '{print $1, $9}' apache-access.log | sort | uniq -c | sort -nr | awk '{printf "%d %s %s\n", $1, $2, $3}'
+# Apache log faylını qruplaşdırır, boşluqları və status kodlarını dəqiq yoxlayır
+awk '$1 ~ /^[0-9]/ && $9 ~ /^[0-9]/ {print $1, $9}' apache-access.log | sort | uniq -c | sort -nr | awk '{printf "%d %s %s\n", $1, $2, $3}'
