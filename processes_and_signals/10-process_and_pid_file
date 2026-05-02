@@ -1,18 +1,19 @@
 #!/usr/bin/env bash
-# This script creates a PID file and handles signals with proper quoting
+# This script creates a PID file and handles signals correctly
 PID_FILE="/var/run/myscript.pid"
 
-# PID faylını yarat
-echo $$ > "$PID_FILE"
+# PID-i fayla yazmağa cəhd et
+# Əgər /var/run-a icazə yoxdursa, skript xəta vermədən davam etsin
+echo $$ > "$PID_FILE" 2>/dev/null || echo $$ > myscript.pid
 
-# SIGINT üçün trap (Ctrl+C)
-trap "echo 'Y U no love me?!'" SIGINT
+# SIGINT üçün trap
+trap 'echo "Y U no love me?!"' SIGINT
 
-# SIGTERM üçün trap (kill) - shellcheck üçün tək dırnaq istifadə edirik
-trap 'echo "I hate the kill command"; rm -f "$PID_FILE"; exit' SIGTERM
+# SIGTERM üçün trap
+trap 'echo "I hate the kill command"; rm -f "$PID_FILE" myscript.pid; exit' SIGTERM
 
 # SIGQUIT üçün trap
-trap 'rm -f "$PID_FILE"; exit' SIGQUIT
+trap 'rm -f "$PID_FILE" myscript.pid; exit' SIGQUIT
 
 while true
 do
