@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+# This script creates a PID file and handles signals
+PID_FILE="/var/run/myscript.pid"
+
+# PID faylını yarat (sudo icazəsi tələb oluna bilər)
+echo $$ > "$PID_FILE"
+
+# SIGINT üçün trap (Ctrl+C)
+trap "echo 'Y U no love me?!'" SIGINT
+
+# SIGTERM üçün trap (kill)
+trap "echo 'I hate the kill command'; rm -f '$PID_FILE'; exit" SIGTERM
+
+# SIGQUIT üçün trap
+trap "rm -f '$PID_FILE'; exit" SIGQUIT
+
+while true
+do
+    echo "To infinity and beyond"
+    sleep 2
+done
