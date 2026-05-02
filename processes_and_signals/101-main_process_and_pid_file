@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+# This script manages a PID file and handles multiple signals
+
+PID_FILE="/var/run/myscript.pid"
+
+# PID faylını yarat
+echo $$ > "$PID_FILE"
+
+# SIGINT üçün trap (CTRL+C)
+trap "echo 'Y U no love me?!'" SIGINT
+
+# SIGTERM və SIGQUIT üçün trap (Terminasiya)
+trap "rm -f '$PID_FILE'; exit" SIGTERM SIGQUIT
+
+# SIGTERM üçün əlavə mesaj çapı funksiyası
+trap "echo 'I hate the kill command'; rm -f '$PID_FILE'; exit" SIGTERM
+
+while true
+do
+    echo "To infinity and beyond"
+    sleep 2
+done
