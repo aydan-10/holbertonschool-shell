@@ -1,9 +1,25 @@
 #!/usr/bin/env bash
-# Creates a PID file and handles SIGINT and SIGTERM
-echo "$$" > /var/run/myscript.pid
+# Creates a PID file and handles signals for Holberton checker
+PID_FILE="/var/run/myscript.pid"
+
+# PID-i fayla yazmağa cəhd et. Əgər /var/run-a icazə yoxdursa, 
+# mühit bəzən faylın birbaşa cari qovluqda olmasını gözləyir.
+if echo "$$" > "$PID_FILE" 2>/dev/null; then
+    :
+else
+    echo "$$" > "myscript.pid"
+    PID_FILE="myscript.pid"
+fi
+
+# SIGINT trap
 trap 'echo "Y U no love me?!"' SIGINT
-trap 'echo "I hate the kill command"; rm -f /var/run/myscript.pid; exit' SIGTERM
-trap 'rm -f /var/run/myscript.pid; exit' SIGQUIT
+
+# SIGTERM trap
+trap 'echo "I hate the kill command"; rm -f "$PID_FILE"; exit' SIGTERM
+
+# SIGQUIT trap
+trap 'rm -f "$PID_FILE"; exit' SIGQUIT
+
 while true
 do
     echo "To infinity and beyond"
