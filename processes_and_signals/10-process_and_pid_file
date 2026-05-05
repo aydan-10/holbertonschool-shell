@@ -1,21 +1,19 @@
 #!/usr/bin/env bash
-# Bu skript PID faylı yaradır və SIGINT, SIGTERM, SIGQUIT siqnallarını idarə edir
-
+# Creates a PID file and handles SIGINT and SIGTERM
 PID_FILE="/var/run/myscript.pid"
 
-# Öz PID-ni göstərilən fayla yaz (icazə yoxdursa xəta mesajını gizlət)
-echo $$ > "$PID_FILE" 2>/dev/null || echo $$ > myscript.pid
+# PID-i fayla yaz (icazə xətası olsa belə mütləq cəhd etsin)
+echo $$ | sudo tee "$PID_FILE" > /dev/null
 
-# SIGINT (Ctrl+C) siqnalı gələndə mesaj ver
+# SIGINT trap
 trap 'echo "Y U no love me?!"' SIGINT
 
-# SIGTERM (kill) siqnalı gələndə mesaj ver və faylı silərək çıx
-trap 'echo "I hate the kill command"; rm -f "$PID_FILE" myscript.pid; exit' SIGTERM
+# SIGTERM trap
+trap 'echo "I hate the kill command"; sudo rm -f "$PID_FILE"; exit' SIGTERM
 
-# SIGQUIT (Ctrl+\) siqnalı gələndə sadəcə faylı sil və çıx
-trap 'rm -f "$PID_FILE" myscript.pid; exit' SIGQUIT
+# SIGQUIT trap
+trap 'sudo rm -f "$PID_FILE"; exit' SIGQUIT
 
-# Sonsuz döngü
 while true
 do
     echo "To infinity and beyond"
