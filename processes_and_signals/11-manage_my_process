@@ -1,32 +1,23 @@
 #!/usr/bin/env bash
-# Manages the manage_my_process script with proper PID file creation
-
+# Manage my process script - Holberton version
 PID_FILE="/var/run/my_process.pid"
 
 case "$1" in
     start)
         ./manage_my_process &
-        # PID-i mütləq fayla yaz, icazə xətası olsa sudo ilə yoxla
-        echo "$!" | sudo tee "$PID_FILE" > /dev/null
+        echo "$!" > "$PID_FILE"
         echo "manage_my_process started"
         ;;
     stop)
-        # Fayldan PID-i oxu və prosesi öldür
-        if [ -f "$PID_FILE" ]; then
-            sudo kill "$(cat "$PID_FILE")"
-            sudo rm -f "$PID_FILE"
-        fi
+        kill "$(cat "$PID_FILE")"
+        rm "$PID_FILE"
         echo "manage_my_process stopped"
         ;;
     restart)
-        # Öncə dayandır
-        if [ -f "$PID_FILE" ]; then
-            sudo kill "$(cat "$PID_FILE")"
-            sudo rm -f "$PID_FILE"
-        fi
-        # Sonra başlat
+        kill "$(cat "$PID_FILE")"
+        rm "$PID_FILE"
         ./manage_my_process &
-        echo "$!" | sudo tee "$PID_FILE" > /dev/null
+        echo "$!" > "$PID_FILE"
         echo "manage_my_process restarted"
         ;;
     *)
