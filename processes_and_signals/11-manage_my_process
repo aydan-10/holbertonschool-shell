@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Manages the manage_my_process script with PID file handling
+# Manages manage_my_process script using pkill and PID file
 
 ACTION=$1
 PID_FILE="/var/run/my_process.pid"
@@ -7,21 +7,21 @@ PID_FILE="/var/run/my_process.pid"
 case "$ACTION" in
     start)
         ./manage_my_process &
-        echo $! > "$PID_FILE"
-        chmod 777 "$PID_FILE" 2>/dev/null
+        echo $! > "$PID_FILE" 2>/dev/null || echo $! > my_process.pid
         echo "manage_my_process started"
         ;;
     stop)
-        kill "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null
-        rm -f "$PID_FILE"
+        pkill -f ./manage_my_process
+        rm -f "$PID_FILE" 2>/dev/null
+        rm -f my_process.pid 2>/dev/null
         echo "manage_my_process stopped"
         ;;
     restart)
-        kill "$(cat "$PID_FILE" 2>/dev/null)" 2>/dev/null
-        rm -f "$PID_FILE"
+        pkill -f ./manage_my_process
+        rm -f "$PID_FILE" 2>/dev/null
+        rm -f my_process.pid 2>/dev/null
         ./manage_my_process &
-        echo $! > "$PID_FILE"
-        chmod 777 "$PID_FILE" 2>/dev/null
+        echo $! > "$PID_FILE" 2>/dev/null || echo $! > my_process.pid
         echo "manage_my_process restarted"
         ;;
     *)
