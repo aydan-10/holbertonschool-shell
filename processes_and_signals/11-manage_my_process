@@ -8,6 +8,7 @@ case "$ACTION" in
     start)
         ./manage_my_process &
         echo $! > "$PID_FILE"
+        chmod 777 "$PID_FILE"
         echo "manage_my_process started"
         ;;
     stop)
@@ -20,6 +21,7 @@ case "$ACTION" in
         rm -f "$PID_FILE"
         ./manage_my_process &
         echo $! > "$PID_FILE"
+        chmod 777 "$PID_FILE"
         echo "manage_my_process restarted"
         ;;
     *)
