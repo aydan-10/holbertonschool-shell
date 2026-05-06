@@ -1,29 +1,27 @@
 #!/usr/bin/env bash
-# Final fix: Handling PID file without permission errors
+# Final fix for task 10 - Success version
 PID_FILE="/var/run/my_process.pid"
 
 case "$1" in
     start)
         ./manage_my_process &
-        echo "$!" > "$PID_FILE" 2>/dev/null || echo "$!" > my_process.pid
+        echo "$!" > "$PID_FILE"
         echo "manage_my_process started"
         ;;
     stop)
-        P_ID=$(cat "$PID_FILE" 2>/dev/null || cat my_process.pid 2>/dev/null)
-        if [ -n "$P_ID" ]; then
-            kill "$P_ID"
-            rm -f "$PID_FILE" 2>/dev/null
-            rm -f my_process.pid 2>/dev/null
+        if [ -f "$PID_FILE" ]; then
+            kill "$(cat "$PID_FILE")"
+            rm -f "$PID_FILE"
         fi
         echo "manage_my_process stopped"
         ;;
     restart)
-        P_ID=$(cat "$PID_FILE" 2>/dev/null || cat my_process.pid 2>/dev/null)
-        [ -n "$P_ID" ] && kill "$P_ID"
-        rm -f "$PID_FILE" 2>/dev/null
-        rm -f my_process.pid 2>/dev/null
+        if [ -f "$PID_FILE" ]; then
+            kill "$(cat "$PID_FILE")"
+            rm -f "$PID_FILE"
+        fi
         ./manage_my_process &
-        echo "$!" > "$PID_FILE" 2>/dev/null || echo "$!" > my_process.pid
+        echo "$!" > "$PID_FILE"
         echo "manage_my_process restarted"
         ;;
     *)
