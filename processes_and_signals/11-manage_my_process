@@ -1,10 +1,5 @@
 #!/usr/bin/env bash
-# Manages the manage_my_process script
-
-if [ "$#" -lt 1 ]; then
-    echo "Usage: manage_my_process {start|stop|restart}"
-    exit 1
-fi
+# Manages the manage_my_process script with PID file handling
 
 ACTION=$1
 PID_FILE="/var/run/my_process.pid"
@@ -17,17 +12,17 @@ case "$ACTION" in
         ;;
     stop)
         P_ID=$(cat "$PID_FILE" 2>/dev/null || cat my_process.pid 2>/dev/null)
-        if [ -n "$P_ID" ]; then
-            kill "$P_ID"
-            rm -f "$PID_FILE" my_process.pid
-            echo "manage_my_process stopped"
-        fi
+        kill "$P_ID" 2>/dev/null
+        rm -f "$PID_FILE" 2>/dev/null
+        rm -f my_process.pid 2>/dev/null
+        echo "manage_my_process stopped"
         ;;
     restart)
         # Stop
         P_ID=$(cat "$PID_FILE" 2>/dev/null || cat my_process.pid 2>/dev/null)
-        [ -n "$P_ID" ] && kill "$P_ID"
-        rm -f "$PID_FILE" my_process.pid
+        kill "$P_ID" 2>/dev/null
+        rm -f "$PID_FILE" 2>/dev/null
+        rm -f my_process.pid 2>/dev/null
         # Start
         ./manage_my_process &
         echo $! > "$PID_FILE" 2>/dev/null || echo $! > my_process.pid
