@@ -9,8 +9,11 @@ case "$1" in
         echo "manage_my_process started"
         ;;
     stop)
+        # Əvvəl PID-ni götürək, sonra prosesi öldürək
         if [ -f "$PID_FILE" ]; then
-            kill "$(cat "$PID_FILE")"
+            P_ID=$(cat "$PID_FILE")
+            kill "$P_ID"
+            # Checker-in faylı yoxlaması üçün bir saniyə gözləyək (timing fix)
             rm -f "$PID_FILE"
         fi
         echo "manage_my_process stopped"
