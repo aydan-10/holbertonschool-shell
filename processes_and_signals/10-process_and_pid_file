@@ -1,11 +1,12 @@
 #!/usr/bin/env bash
-# Creates a PID file and handles SIGINT and SIGTERM
-echo "$$" | tee /var/run/myscript.pid
-trap 'echo "Y U no love me?!"' SIGINT
+# Creates PID file, handles signals
+
+echo $$ > /var/run/myscript.pid
+
 trap 'echo "I hate the kill command"; rm -f /var/run/myscript.pid; exit' SIGTERM
-trap 'rm -f /var/run/myscript.pid; exit' SIGQUIT
-while true
-do
+trap 'echo "Y U no love me?!"' SIGINT
+
+while true; do
     echo "To infinity and beyond"
     sleep 2
 done
