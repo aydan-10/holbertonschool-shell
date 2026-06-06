@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 # Creates PID file, handles signals
 
-echo $$ > /var/run/myscript.pid
+sudo bash -c "echo $$ > /var/run/myscript.pid"
 
-trap 'echo "I hate the kill command"; rm -f /var/run/myscript.pid; exit' SIGTERM SIGQUIT
+trap 'echo "I hate the kill command"; sudo rm -f /var/run/myscript.pid; exit' SIGTERM SIGQUIT
 trap 'echo "Y U no love me?!"' SIGINT
 
 while true; do
